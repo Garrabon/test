@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comment Section with Images</title>
+    <style>
+        /* Optional: Add some basic styling for comments */
+        .comment {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .deleteButton {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+            color: red;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .commentImage {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Comments Section with Images:</h1>
+
+    <form id="commentForm" enctype="multipart/form-data">
+        <textarea id="userText" name="userText" rows="4" cols="50"></textarea>
+        <br>
+        <input type="file" accept="image/*" id="imageInput" name="imageInput">
+        <br>
+        <input type="button" value="Submit" onclick="submitComment()">
+    </form>
+
+    <div id="commentsSection"></div>
+
+    <script>
+        function submitComment() {
+            // Get the user's text from the textarea
+            var userText = document.getElementById('userText').value;
+
+            if (userText.trim() === "") {
+                alert("Please enter a comment before submitting.");
+                return;
+            }
+
+            // Get the selected image, if any
+            var imageInput = document.getElementById('imageInput');
+            var selectedImage = imageInput.files[0];
+
+            // Create a new comment element
+            var commentElement = document.createElement('div');
+            commentElement.className = 'comment';
+            commentElement.textContent = userText;
+
+            // Display the image in the comment if selected
+            if (selectedImage) {
+                var imageElement = document.createElement('img');
+                imageElement.className = 'commentImage';
+                imageElement.src = URL.createObjectURL(selectedImage);
+                commentElement.appendChild(imageElement);
+            }
+
+            // Create a delete button for the comment
+            var deleteButton = document.createElement('span');
+            deleteButton.className = 'deleteButton';
+            deleteButton.textContent = '❌'; // Red "X" character
+            deleteButton.onclick = function() {
+                // Remove the comment when the delete button is clicked
+                commentElement.parentNode.removeChild(commentElement);
+            };
+
+            // Append the delete button to the comment
+            commentElement.appendChild(deleteButton);
+
+            // Append the comment to the comments section
+            document.getElementById('commentsSection').appendChild(commentElement);
+
+            // Clear the textarea and file input after submitting
+            document.getElementById('userText').value = '';
+            imageInput.value = '';
+        }
+    </script>
+
+</body>
+</html>
